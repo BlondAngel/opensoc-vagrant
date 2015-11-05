@@ -21,7 +21,7 @@ function installHadoop {
     mkdir -p /var/log/hadoop
     mkdir -p /opt/hadoop/logs
 
-    # neeed for writing to HDFS
+    # needed for writing to HDFS
     yum install -y snappy snappy-devel
 
 }

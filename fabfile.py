@@ -10,7 +10,7 @@ from fabric.colors import yellow, green
 temp_ssh_config = '.ssh_config'
 
 def vagrant():
-    '''sets up fabric environment to work with vagrant VMs'''
+    '''Sets up fabric environment to work with vagrant VMs'''
     with open(temp_ssh_config, 'w') as f:
         f.write(local('vagrant ssh-config', capture=True))
 
@@ -63,6 +63,7 @@ def supervisorctl_status():
 def status():
     execute(supervisorctl_status, hosts=['node{0}'.format(x) for x in range(1,total_nodes+1)])
 
+@hosts('node1')
 def init_ip_whitelist():
     run('/opt/hbase/bin/hbase shell /vagrant/resources/opensoc/hbase_ip_whitelist.rb')
 
@@ -99,7 +100,7 @@ def get_topologies(repo='../opensoc-streaming'):
         return vagrant_jar
 
     with lcd(repo):
-        local('mvn clean package')
+        local('mvn clean package -Dmaven.test.skip=true')
 
     local('cp {0} {1}'.format(
         topology_jar,
@@ -109,7 +110,7 @@ def get_topologies(repo='../opensoc-streaming'):
     return vagrant_jar
     
 @hosts('node1')
-def start_topology(topology, repo=None, local_mode=False, config_path='/vagrant/opensoc/OpenSOC_Configs/', generator_spout=False):
+def start_topology(topology, repo=None, local_mode=False, config_path='/vagrant/resources/opensoc/config/', generator_spout=False):
     '''Builds and copies a fresh topology jar from a locally cloned opensoc-streaming and submits it to storm'''
 
     if repo is not None:
